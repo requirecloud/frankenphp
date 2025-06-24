@@ -3,12 +3,17 @@
   "extends": [
     "config:recommended"
   ],
-  "baseBranches": ["main"],
+  "baseBranches": [
+    "main"
+  ],
   "dependencyDashboard": true,
   "enabled": true,
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["^docker-bake\\.hcl$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^docker-bake\\.hcl$/"
+      ],
       "matchStrings": [
         "frankenphp_upstream = \"docker-image://(?<depName>.*?):(?<currentValue>.*?)\""
       ],
