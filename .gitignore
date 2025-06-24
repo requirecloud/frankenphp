@@ -1,0 +1,5 @@
+/.idea/
+/tests/var/
+/tests/vendor/
+/tests/composer.*
+*.dist**
