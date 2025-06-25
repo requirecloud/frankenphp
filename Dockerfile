@@ -1,11 +1,9 @@
 #syntax=docker/dockerfile:1
 
-ARG FRANKENPHP_VERSION=1.7.0-php8.4.7
-
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
 
-# defaults
+# defaults, copied from original frankenphp_dev stage
 ENV APP_ENV=dev
 ENV XDEBUG_MODE=off
 ENV FRANKENPHP_WORKER_CONFIG=watch
@@ -40,17 +38,20 @@ ENV MERCURE_TRANSPORT_URL=bolt:///data/mercure.db
 
 ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
+###> recipes ###
+###< recipes ###
+
 ###> requirecloud changes ###
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 ###< requirecloud changes ###
 
-COPY --link conf.d/ $PHP_INI_DIR/app.conf.d/
-COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-COPY --link Caddyfile /etc/caddy/Caddyfile
+COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
+COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY --link frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
-CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
+CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile" ]
 
 # Handle dev and prod in project
