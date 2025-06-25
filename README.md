@@ -1,6 +1,6 @@
 # RequireCloud FrankenPHP Docker images
 
-Opinionated Docker images based on [dunglas/frankenphp](https://github.com/php/frankenphp).
+Opinionated Docker images based on [FrankenPHP](https://frankenphp.dev) ([repo](https://github.com/php/frankenphp)).
 
 Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker).
 
