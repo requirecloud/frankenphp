@@ -2,16 +2,18 @@
 
 Opinionated Docker images based on `dunglas/frankenphp`.
 
+Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker).
+
 ## Variants
 
-| Image                           | Tag            | FrankenPHP | PHP |
-|---------------------------------|----------------|------------|-----|
-| ghcr.io/requirecloud/frankenphp | 1.7.0-php8     | 1.7.0      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.7.0-php8.3   | 1.7.0      | 8.3 |
-| ghcr.io/requirecloud/frankenphp | 1.7.0-php8.3.x | 1.7.0      | 8.3 |
-| ghcr.io/requirecloud/frankenphp | 1.7.0-php8.4   | 1.7.0      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.7.0-php8.4.x | 1.7.0      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | latest         | 1.7.0      | 8.4 |
+| Tag            | Image                           | FrankenPHP | PHP |
+|:---------------|:--------------------------------|:-----------|:----|
+| 1.7.0-php8     | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.4 |
+| 1.7.0-php8.3   | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.3 |
+| 1.7.0-php8.3.x | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.3 |
+| 1.7.0-php8.4   | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.4 |
+| 1.7.0-php8.4.x | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.4 |
+| latest         | ghcr.io/requirecloud/frankenphp | 1.7.0      | 8.4 |
 
 ## Extensions added
 
