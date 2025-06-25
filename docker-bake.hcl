@@ -36,11 +36,11 @@ target "php-83" {
     PHP_SHORT_VERSION = "83"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.7.0-php8.3.22"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.6.2-php8.3.21"
   }
   tags = [
     "${REPO_BASE}:1.7.0-php8.3",
-    "${REPO_BASE}:1.7.0-php8.3.22"
+    "${REPO_BASE}:1.7.0-php8.3.21"
   ]
 }
 
