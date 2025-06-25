@@ -1,6 +1,6 @@
 # RequireCloud FrankenPHP Docker images
 
-Opinionated Docker images based on `dunglas/frankenphp`.
+Opinionated Docker images based on [dunglas/frankenphp](https://github.com/php/frankenphp).
 
 Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker).
 
@@ -78,7 +78,9 @@ RUN set -eux; \
   sync;
 ```
 
-## TODO
+## TODO and Questions
 
+- Add build and push workflow in GHA
 - App specific Caddyfiles e.g. Drupal
 - Should Vulcain be removed?
+- Should mysql and postgresql be included?
