@@ -13,4 +13,4 @@ alias ll="ls -lah"
 alias make="make -s"
 
 # Run neofetch on login
-neofetch --ascii_colors 1
+neofetch --ascii_colors 1 --config /root/.config/neofetch/config.conf
