@@ -9,8 +9,8 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 | Image                           | Tag            | FrankenPHP | PHP |
 |:--------------------------------|:---------------|:-----------|:----|
 | ghcr.io/requirecloud/frankenphp | 1.9.0-php8     | 1.9.0      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.8.0-php8.3   | 1.8.0      | 8.3 |
-| ghcr.io/requirecloud/frankenphp | 1.8.0-php8.3.x | 1.8.0      | 8.3 |
+| ghcr.io/requirecloud/frankenphp | 1.9.0-php8.3   | 1.9.0      | 8.3 |
+| ghcr.io/requirecloud/frankenphp | 1.9.0-php8.3.x | 1.9.0      | 8.3 |
 | ghcr.io/requirecloud/frankenphp | 1.9.0-php8.4   | 1.9.0      | 8.4 |
 | ghcr.io/requirecloud/frankenphp | 1.9.0-php8.4.x | 1.9.0      | 8.4 |
 | ghcr.io/requirecloud/frankenphp | latest         | 1.9.0      | 8.4 |
