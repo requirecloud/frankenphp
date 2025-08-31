@@ -26,8 +26,8 @@ bake-test: BAKE_FLAGS := --pull --progress plain --no-cache
 bake-test: bake-all run-frankenphp-tests ## CI test for FrankenPHP images
 
 PHONY += run-frankenphp-tests
-run-frankenphp-tests: IMG83 := $(REPO_BASE):1.9.0-php8.3
-run-frankenphp-tests: IMG84 := $(REPO_BASE):1.9.0-php8.4
+run-frankenphp-tests: IMG83 := $(REPO_BASE):1.9.1-php8.3
+run-frankenphp-tests: IMG84 := $(REPO_BASE):1.9.1-php8.4
 run-frankenphp-tests:
 	$(call step,Run tests in $(IMG83))
 	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG83) /app/tests.sh

@@ -19,7 +19,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	file \
 	gettext \
 	git \
-    neofetch \
     vim \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -50,7 +49,6 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY --link frankenphp/Caddyfile /etc/frankenphp/Caddyfile
-COPY --link frankenphp/config.conf /root/.config/neofetch/config.conf
 COPY --link frankenphp/.bashrc /root/.bashrc
 
 ENTRYPOINT ["docker-entrypoint"]
