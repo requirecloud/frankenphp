@@ -11,3 +11,6 @@ fi
 # Aliases
 alias ll="ls -lah"
 alias make="make -s"
+
+# Run fastfetch on login
+fastfetch --config /root/.config/fastfetch/all.jsonc

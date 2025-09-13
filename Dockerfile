@@ -16,6 +16,7 @@ VOLUME /app/var/
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	acl \
+    fastfetch \
 	file \
 	gettext \
 	git \
@@ -50,6 +51,7 @@ COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY --link frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 COPY --link frankenphp/.bashrc /root/.bashrc
+COPY --link frankenphp/all.jsonc /root/.config/fastfetch/all.jsonc
 
 ENTRYPOINT ["docker-entrypoint"]
 
