@@ -28,7 +28,9 @@ bake-test: bake-all run-frankenphp-tests ## CI test for FrankenPHP images
 PHONY += shell-test
 shell-test: IMG84 := $(REPO_BASE):1.9.1-php8.4
 shell-test:
-	@docker run --rm -it $(IMG84) bash
+	@docker run --rm -it \
+		-v $(CURDIR)/frankenphp/all.jsonc:/root/.config/fastfetch/all.jsonc \
+		$(IMG84) bash
 
 PHONY += run-frankenphp-tests
 run-frankenphp-tests: IMG83 := $(REPO_BASE):1.9.1-php8.3

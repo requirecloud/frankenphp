@@ -7,6 +7,16 @@
     "os",
     {
       "type": "command",
+      "key": "FrankenPHP",
+      "text": "frankenphp --version | awk '{print $2}'"
+    },
+    {
+      "type": "command",
+      "key": "Caddy",
+      "text": "frankenphp --version | awk '{print $6}'"
+    },
+    {
+      "type": "command",
       "key": "PHP",
       "text": "php -r 'echo phpversion();'"
     },
