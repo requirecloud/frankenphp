@@ -5,7 +5,8 @@ variable "REPO_BASE" {
 group "default" {
   targets = [
     "php-83",
-    "php-84"
+    "php-84",
+    "php-85",
   ]
 }
 
@@ -40,7 +41,7 @@ target "php-83" {
   }
   tags = [
     "${REPO_BASE}:1.9.1-php8.3",
-    "${REPO_BASE}:1.9.1-php8.3.28"
+    "${REPO_BASE}:1.9.1-php8.3.28",
   ]
 }
 
@@ -57,6 +58,21 @@ target "php-84" {
     "${REPO_BASE}:1.9.1-php8",
     "${REPO_BASE}:1.9.1-php8.4",
     "${REPO_BASE}:1.9.1-php8.4.15",
-    "${REPO_BASE}:latest"
+    "${REPO_BASE}:latest",
+  ]
+}
+
+target "php-85" {
+  inherits = ["common"]
+  args = {
+    PHP_VERSION = "8.5"
+    PHP_SHORT_VERSION = "85"
+  }
+  contexts = {
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.9.1-php8.5.0"
+  }
+  tags = [
+    "${REPO_BASE}:1.9.1-php8.5",
+    "${REPO_BASE}:1.9.1-php8.5.0",
   ]
 }

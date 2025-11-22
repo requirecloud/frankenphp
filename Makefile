@@ -35,11 +35,14 @@ shell-test:
 PHONY += run-frankenphp-tests
 run-frankenphp-tests: IMG83 := $(REPO_BASE):1.9.1-php8.3
 run-frankenphp-tests: IMG84 := $(REPO_BASE):1.9.1-php8.4
+run-frankenphp-tests: IMG84 := $(REPO_BASE):1.9.1-php8.5
 run-frankenphp-tests:
 	$(call step,Run tests in $(IMG83))
 	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG83) /app/tests.sh
 	$(call step,Run tests in $(IMG84))
 	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG84) /app/tests.sh
+	$(call step,Run tests in $(IMG85))
+	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG85) /app/tests.sh
 
 PHONY += symfony-docker-update
 symfony-docker-update:
