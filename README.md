@@ -6,16 +6,14 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 ## Variants
 
-| Image                           | Tag            | FrankenPHP | PHP |
-|:--------------------------------|:---------------|:-----------|:----|
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8     | 1.9.1      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.3   | 1.9.1      | 8.3 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.3.x | 1.9.1      | 8.3 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.4   | 1.9.1      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.4.x | 1.9.1      | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.5   | 1.9.1      | 8.5 |
-| ghcr.io/requirecloud/frankenphp | 1.9.1-php8.5.x | 1.9.1      | 8.5 |
-| ghcr.io/requirecloud/frankenphp | latest         | 1.9.1      | 8.4 |
+| Image                           | Tag             | FrankenPHP | PHP |
+|:--------------------------------|:----------------|:-----------|:----|
+| ghcr.io/requirecloud/frankenphp | 1.10.0-php8.4   | 1.10.0     | 8.4 |
+| ghcr.io/requirecloud/frankenphp | 1.10.0-php8.4.x | 1.10.0     | 8.4 |
+| ghcr.io/requirecloud/frankenphp | 1.10.0-php8     | 1.10.0     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | 1.10.0-php8.5   | 1.10.0     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | 1.10.0-php8.5.x | 1.10.0     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | latest          | 1.10.0     | 8.5 |
 
 All tags are released with `linux/amd64` and `linux/arm64` architecture.
 
@@ -36,7 +34,7 @@ In your `Dockerfile` it could be used e.g. like this:
 ```Dockerfile
 #syntax=docker/dockerfile:1
 
-FROM ghcr.io/requirecloud/frankenphp:1.9.1-php8.4.15 AS frankenphp_base
+FROM ghcr.io/requirecloud/frankenphp:1.10.0-php8.5 AS frankenphp_base
 
 # Install additional extensions
 RUN apt-get update && \

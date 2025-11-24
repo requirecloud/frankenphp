@@ -4,7 +4,6 @@ variable "REPO_BASE" {
 
 group "default" {
   targets = [
-    "php-83",
     "php-84",
     "php-85",
   ]
@@ -30,21 +29,6 @@ target "common" {
 # FRANKENPHP
 #
 
-target "php-83" {
-  inherits = ["common"]
-  args = {
-    PHP_VERSION = "8.3"
-    PHP_SHORT_VERSION = "83"
-  }
-  contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.9.1-php8.3.28"
-  }
-  tags = [
-    "${REPO_BASE}:1.9.1-php8.3",
-    "${REPO_BASE}:1.9.1-php8.3.28",
-  ]
-}
-
 target "php-84" {
   inherits = ["common"]
   args = {
@@ -52,13 +36,12 @@ target "php-84" {
     PHP_SHORT_VERSION = "84"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.9.1-php8.4.15"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.10.0-php8.4.15"
   }
   tags = [
-    "${REPO_BASE}:1.9.1-php8",
-    "${REPO_BASE}:1.9.1-php8.4",
-    "${REPO_BASE}:1.9.1-php8.4.15",
-    "${REPO_BASE}:latest",
+    "${REPO_BASE}:1.10.0-php8.4",
+    "${REPO_BASE}:1.10.0-php8.4.15",
+
   ]
 }
 
@@ -69,10 +52,12 @@ target "php-85" {
     PHP_SHORT_VERSION = "85"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.9.1-php8.5.0"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.10.0-php8.5.0"
   }
   tags = [
-    "${REPO_BASE}:1.9.1-php8.5",
-    "${REPO_BASE}:1.9.1-php8.5.0",
+    "${REPO_BASE}:1.10.0-php8",
+    "${REPO_BASE}:1.10.0-php8.5",
+    "${REPO_BASE}:1.10.0-php8.5.0",
+    "${REPO_BASE}:latest",
   ]
 }
