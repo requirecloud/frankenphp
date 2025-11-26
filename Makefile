@@ -26,15 +26,15 @@ bake-test: BAKE_FLAGS := --pull --progress plain --no-cache
 bake-test: bake-all run-frankenphp-tests ## CI test for FrankenPHP images
 
 PHONY += shell-test
-shell-test: IMG84 := $(REPO_BASE):1.10.0-php8.5
+shell-test: IMG84 := $(REPO_BASE):1.10.1-php8.5
 shell-test:
 	@docker run --rm -it \
 		-v $(CURDIR)/frankenphp/all.jsonc:/root/.config/fastfetch/all.jsonc \
 		$(IMG84) bash
 
 PHONY += run-frankenphp-tests
-run-frankenphp-tests: IMG84 := $(REPO_BASE):1.10.0-php8.4
-run-frankenphp-tests: IMG85 := $(REPO_BASE):1.10.0-php8.5
+run-frankenphp-tests: IMG84 := $(REPO_BASE):1.10.1-php8.4
+run-frankenphp-tests: IMG85 := $(REPO_BASE):1.10.1-php8.5
 run-frankenphp-tests:
 	$(call step,Run tests in $(IMG84))
 	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG84) /app/tests.sh
