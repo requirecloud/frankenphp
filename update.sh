@@ -33,11 +33,11 @@ declare -a files=(
 declare -a targets=(
   ".dockerignore"
   "Dockerfile.dist"
-  "docker-entrypoint.dist.sh"
-  "Caddyfile"
-  "conf.d/10-app.ini"
-  "conf.d/20-app.dev.ini.dist"
-  "conf.d/20-app.prod.ini.dist"
+  "frankenphp/docker-entrypoint.dist.sh"
+  "frankenphp/Caddyfile"
+  "frankenphp/conf.d/10-app.ini"
+  "frankenphp/conf.d/20-app.dev.ini.dist"
+  "frankenphp/conf.d/20-app.prod.ini.dist"
 )
 
 main() {
