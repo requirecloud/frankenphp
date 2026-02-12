@@ -8,12 +8,12 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 | Image                           | Tag             | FrankenPHP | PHP |
 |:--------------------------------|:----------------|:-----------|:----|
-| ghcr.io/requirecloud/frankenphp | 1.11.1-php8.4   | 1.11.1     | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.11.1-php8.4.x | 1.11.1     | 8.4 |
-| ghcr.io/requirecloud/frankenphp | 1.11.1-php8     | 1.11.1     | 8.5 |
-| ghcr.io/requirecloud/frankenphp | 1.11.1-php8.5   | 1.11.1     | 8.5 |
-| ghcr.io/requirecloud/frankenphp | 1.11.1-php8.5.x | 1.11.1     | 8.5 |
-| ghcr.io/requirecloud/frankenphp | latest          | 1.11.1     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | 1.11.2-php8.4   | 1.11.2     | 8.4 |
+| ghcr.io/requirecloud/frankenphp | 1.11.2-php8.4.x | 1.11.2     | 8.4 |
+| ghcr.io/requirecloud/frankenphp | 1.11.2-php8     | 1.11.2     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | 1.11.2-php8.5   | 1.11.2     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | 1.11.2-php8.5.x | 1.11.2     | 8.5 |
+| ghcr.io/requirecloud/frankenphp | latest          | 1.11.2     | 8.5 |
 
 All tags are released with `linux/amd64` and `linux/arm64` architecture.
 
