@@ -11,6 +11,8 @@ REPO_BASE := ghcr.io/requirecloud/frankenphp
 
 PHONY += bake-all
 bake-all: ## Bake all FrankenPHP images
+	@docker buildx ls | grep -q ineen-buildx || docker buildx create --name=ineen-buildx --platform linux/amd64,linux/arm64
+	@docker buildx use ineen-buildx
 	@docker buildx bake -f docker-bake.hcl $(BAKE_FLAGS)
 
 PHONY += bake-print
