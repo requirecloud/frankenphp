@@ -34,7 +34,7 @@ In your `Dockerfile` it could be used e.g. like this:
 ```Dockerfile
 #syntax=docker/dockerfile:1
 
-FROM ghcr.io/requirecloud/frankenphp:1.11.1-php8.5 AS frankenphp_base
+FROM ghcr.io/requirecloud/frankenphp:1.11.2-php8.5 AS frankenphp_base
 
 # Install additional extensions
 RUN apt-get update && \
