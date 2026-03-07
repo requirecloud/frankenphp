@@ -39,8 +39,8 @@ target "php-84" {
     frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.0-php8.4.18"
   }
   tags = [
-    "${REPO_BASE}:1.11.3-php8.4",
-    "${REPO_BASE}:1.11.3-php8.4.18",
+    "${REPO_BASE}:1.12.0-php8.4",
+    "${REPO_BASE}:1.12.0-php8.4.18",
 
   ]
 }
@@ -55,9 +55,9 @@ target "php-85" {
     frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.0-php8.5.3"
   }
   tags = [
-    "${REPO_BASE}:1.11.3-php8",
-    "${REPO_BASE}:1.11.3-php8.5",
-    "${REPO_BASE}:1.11.3-php8.5.3",
+    "${REPO_BASE}:1.12.0-php8",
+    "${REPO_BASE}:1.12.0-php8.5",
+    "${REPO_BASE}:1.12.0-php8.5.3",
     "${REPO_BASE}:latest",
   ]
 }
