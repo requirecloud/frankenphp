@@ -8,7 +8,7 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 | Image                           | Tag              | FrankenPHP | PHP    |
 |:--------------------------------|:-----------------|:-----------|:-------|
-| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.4    | 1.12.5     | 8.4.1  |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.4    | 1.12.5     | 8.4.23 |
 | ghcr.io/requirecloud/frankenphp | 1.12.5-php8.4.23 | 1.12.5     | 8.4.23 |
 | ghcr.io/requirecloud/frankenphp | 1.12.5-php8      | 1.12.5     | 8.5.8  |
 | ghcr.io/requirecloud/frankenphp | 1.12.5-php8.5    | 1.12.5     | 8.5.8  |
