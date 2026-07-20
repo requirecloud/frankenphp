@@ -8,12 +8,12 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 | Image                           | Tag              | FrankenPHP | PHP    |
 |:--------------------------------|:-----------------|:-----------|:-------|
-| ghcr.io/requirecloud/frankenphp | 1.12.4-php8.4    | 1.12.4     | 8.4.1  |
-| ghcr.io/requirecloud/frankenphp | 1.12.4-php8.4.21 | 1.12.4     | 8.4.21 |
-| ghcr.io/requirecloud/frankenphp | 1.12.4-php8      | 1.12.4     | 8.5.6  |
-| ghcr.io/requirecloud/frankenphp | 1.12.4-php8.5    | 1.12.4     | 8.5.6  |
-| ghcr.io/requirecloud/frankenphp | 1.12.4-php8.5.6  | 1.12.4     | 8.5.6  |
-| ghcr.io/requirecloud/frankenphp | latest           | 1.12.4     | 8.5.6  |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.4    | 1.12.5     | 8.4.1  |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.4.23 | 1.12.5     | 8.4.23 |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8      | 1.12.5     | 8.5.8  |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.5    | 1.12.5     | 8.5.8  |
+| ghcr.io/requirecloud/frankenphp | 1.12.5-php8.5.8  | 1.12.5     | 8.5.8  |
+| ghcr.io/requirecloud/frankenphp | latest           | 1.12.5     | 8.5.8  |
 
 All tags are released with `linux/amd64` and `linux/arm64` architecture.
 
@@ -34,7 +34,7 @@ In your `Dockerfile` it could be used e.g. like this:
 ```Dockerfile
 #syntax=docker/dockerfile:1
 
-FROM ghcr.io/requirecloud/frankenphp:1.12.4-php8.5 AS frankenphp_base
+FROM ghcr.io/requirecloud/frankenphp:1.12.5-php8.5 AS frankenphp_base
 
 # Install additional extensions
 RUN apt-get update && \
