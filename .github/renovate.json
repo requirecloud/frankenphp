@@ -8,6 +8,18 @@
   ],
   "dependencyDashboard": true,
   "enabled": true,
+  "packageRules": [
+    {
+      "description": "Automerge FrankenPHP and PHP patch updates once the build workflow has passed",
+      "matchDepNames": [
+        "dunglas/frankenphp"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
