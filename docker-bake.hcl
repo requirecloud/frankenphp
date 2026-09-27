@@ -36,11 +36,11 @@ target "php-84" {
     PHP_SHORT_VERSION = "84"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.4.24"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.4.26"
   }
   tags = [
     "${REPO_BASE}:1.12.7-php8.4",
-    "${REPO_BASE}:1.12.7-php8.4.24",
+    "${REPO_BASE}:1.12.7-php8.4.26",
 
   ]
 }
@@ -52,12 +52,12 @@ target "php-85" {
     PHP_SHORT_VERSION = "85"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.5.9"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.5.11"
   }
   tags = [
     "${REPO_BASE}:1.12.7-php8",
     "${REPO_BASE}:1.12.7-php8.5",
-    "${REPO_BASE}:1.12.7-php8.5.9",
+    "${REPO_BASE}:1.12.7-php8.5.11",
     "${REPO_BASE}:latest",
   ]
 }
