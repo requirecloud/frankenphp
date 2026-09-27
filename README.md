@@ -77,10 +77,3 @@ RUN set -eux; \
 	composer run-script --no-dev post-install-cmd;  \
   sync;
 ```
-
-## TODO and Questions
-
-- Add build and push workflow in GHA
-- App specific Caddyfiles e.g. Drupal
-- Should Vulcain be removed?
-- Should mysql and postgresql be included?
