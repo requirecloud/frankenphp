@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
   "baseBranchPatterns": [
     "main"
@@ -16,6 +17,19 @@
       ],
       "matchUpdateTypes": [
         "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Automerge non-major GitHub Actions updates once the build workflow has passed",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pinDigest"
       ],
       "automerge": true
     }
