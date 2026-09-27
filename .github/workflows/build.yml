@@ -1,0 +1,150 @@
+name: Build FrankenPHP images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docker-bake.hcl
+      - Dockerfile
+      - frankenphp/**
+      - tests/**
+      - .github/workflows/build.yml
+  pull_request:
+    paths:
+      - docker-bake.hcl
+      - Dockerfile
+      - frankenphp/**
+      - tests/**
+      - .github/workflows/build.yml
+  # Weekly rebuild to pick up OS package updates
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # Also read by docker-bake.hcl
+  REPO_BASE: ghcr.io/requirecloud/frankenphp
+  PUSH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+
+jobs:
+
+  # Build each target natively per arch, run tests and push the image by digest
+  build:
+    name: Build ${{ matrix.target }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [php-84, php-85]
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runner: ubuntu-26.04
+          - arch: arm64
+            runner: ubuntu-26.04-arm
+    env:
+      TARGET: ${{ matrix.target }}
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Login to GHCR
+        if: env.PUSH == 'true'
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # One build loads the image for testing and pushes the same image untagged by digest.
+      # It only gets tagged in the merge job, after tests on all arches have passed.
+      - name: Build image
+        run: |
+          outputs=(--set "$TARGET.output=type=docker,name=frankenphp-test:$TARGET")
+          if [[ "$PUSH" == "true" ]]; then
+            outputs+=(--set "$TARGET.output=type=image,name=$REPO_BASE,push-by-digest=true,name-canonical=true,push=true")
+          fi
+          docker buildx bake -f docker-bake.hcl "$TARGET" --pull --no-cache \
+            --set "$TARGET.platform=linux/$ARCH" \
+            --set "$TARGET.tags=" \
+            "${outputs[@]}" \
+            --metadata-file metadata.json
+
+      - name: Run tests
+        run: docker run --rm -v "$PWD/tests:/app" "frankenphp-test:$TARGET" /app/tests.sh
+
+      - name: Export digest
+        if: env.PUSH == 'true'
+        run: |
+          digest=$(jq -r --arg t "$TARGET" '.[$t]["containerimage.digest"]' metadata.json)
+          mkdir -p digests
+          touch "digests/${digest#sha256:}"
+
+      - name: Upload digest
+        if: env.PUSH == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: digests-${{ matrix.target }}-${{ matrix.arch }}
+          path: digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # Combine per-arch digests into multi-arch manifests with the tags from docker-bake.hcl
+  merge:
+    name: Merge ${{ matrix.target }}
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        target: [php-84, php-85]
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download digests
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: digests-${{ matrix.target }}-*
+          path: digests
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Login to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push manifest
+        run: |
+          mapfile -t tags < <(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[] | "--tag=" + .')
+          mapfile -t sources < <(find digests -type f -printf "$REPO_BASE@sha256:%f\n")
+          docker buildx imagetools create "${tags[@]}" "${sources[@]}"
+
+      - name: Inspect image
+        run: |
+          tag=$(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[0]')
+          docker buildx imagetools inspect "$tag"

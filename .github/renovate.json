@@ -15,9 +15,8 @@
         "/^docker-bake\\.hcl$/"
       ],
       "matchStrings": [
-        "frankenphp_upstream = \"docker-image://(?<depName>.*?):(?<currentValue>.*?)\""
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+default = \"(?<currentValue>[^\"]+)\""
       ],
-      "datasourceTemplate": "docker",
       "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-php(?<compatibility>\\d+\\.\\d+)\\.(?<build>\\d+)$"
     }
   ]

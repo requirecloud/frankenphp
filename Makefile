@@ -9,6 +9,9 @@ endif
 BAKE_FLAGS := --pull --no-cache --push
 REPO_BASE := ghcr.io/requirecloud/frankenphp
 
+# First tag of a bake target, e.g. $(call bake_tag,php-84)
+bake_tag = $(shell docker buildx bake -f docker-bake.hcl --print $(1) 2>/dev/null | jq -r '.target["$(1)"].tags[0]')
+
 PHONY += bake-all
 bake-all: ## Bake all FrankenPHP images
 	@docker buildx ls | grep -q ineen-buildx || docker buildx create --name=ineen-buildx --platform linux/amd64,linux/arm64
@@ -28,15 +31,15 @@ bake-test: BAKE_FLAGS := --pull --progress plain --no-cache
 bake-test: bake-all run-frankenphp-tests ## CI test for FrankenPHP images
 
 PHONY += shell-test
-shell-test: IMG84 := $(REPO_BASE):1.12.7-php8.5
+shell-test: IMG85 = $(call bake_tag,php-85)
 shell-test:
 	@docker run --rm -it \
 		-v $(CURDIR)/frankenphp/all.jsonc:/root/.config/fastfetch/all.jsonc \
-		$(IMG84) bash
+		$(IMG85) bash
 
 PHONY += run-frankenphp-tests
-run-frankenphp-tests: IMG84 := $(REPO_BASE):1.12.7-php8.4
-run-frankenphp-tests: IMG85 := $(REPO_BASE):1.12.7-php8.5
+run-frankenphp-tests: IMG84 = $(call bake_tag,php-84)
+run-frankenphp-tests: IMG85 = $(call bake_tag,php-85)
 run-frankenphp-tests:
 	$(call step,Run tests in $(IMG84))
 	@docker run --rm -t -v $(CURDIR)/tests:/app $(IMG84) /app/tests.sh

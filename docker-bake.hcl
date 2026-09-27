@@ -2,6 +2,23 @@ variable "REPO_BASE" {
   default = "ghcr.io/requirecloud/frankenphp"
 }
 
+# Upstream dunglas/frankenphp tags, all output tags are derived from these
+variable "UPSTREAM_PHP84" {
+  # renovate: datasource=docker depName=dunglas/frankenphp
+  default = "1.12.7-php8.4.26"
+}
+
+variable "UPSTREAM_PHP85" {
+  # renovate: datasource=docker depName=dunglas/frankenphp
+  default = "1.12.7-php8.5.11"
+}
+
+# "1.12.7-php8.4.26" => "1.12.7"
+function "frankenphp_version" {
+  params = [tag]
+  result = split("-php", tag)[0]
+}
+
 group "default" {
   targets = [
     "php-84",
@@ -36,12 +53,11 @@ target "php-84" {
     PHP_SHORT_VERSION = "84"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.4.26"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:${UPSTREAM_PHP84}"
   }
   tags = [
-    "${REPO_BASE}:1.12.7-php8.4",
-    "${REPO_BASE}:1.12.7-php8.4.26",
-
+    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP84)}-php8.4",
+    "${REPO_BASE}:${UPSTREAM_PHP84}",
   ]
 }
 
@@ -52,12 +68,12 @@ target "php-85" {
     PHP_SHORT_VERSION = "85"
   }
   contexts = {
-    frankenphp_upstream = "docker-image://dunglas/frankenphp:1.12.7-php8.5.11"
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:${UPSTREAM_PHP85}"
   }
   tags = [
-    "${REPO_BASE}:1.12.7-php8",
-    "${REPO_BASE}:1.12.7-php8.5",
-    "${REPO_BASE}:1.12.7-php8.5.11",
+    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP85)}-php8",
+    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP85)}-php8.5",
+    "${REPO_BASE}:${UPSTREAM_PHP85}",
     "${REPO_BASE}:latest",
   ]
 }

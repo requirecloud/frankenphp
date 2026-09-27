@@ -13,22 +13,30 @@ Opinionated Docker images based on [FrankenPHP](https://frankenphp.dev), used as
 
 ## Version Updates
 
-When updating FrankenPHP versions, three files need to change:
+Renovate opens PRs for new upstream tags (PHP patch releases and FrankenPHP releases). To update by hand:
 
-1. **`docker-bake.hcl`** — update `frankenphp_upstream` context image and output tags for both `php-84` and `php-85` targets
-2. **`Makefile`** — update version references in `shell-test` and `run-frankenphp-tests` targets
-3. **`README.md`** — update the variants table and the example `FROM` line
+1. **`docker-bake.hcl`** — update `UPSTREAM_PHP84` / `UPSTREAM_PHP85` (full upstream tag, e.g. `1.12.7-php8.4.26`). All output tags are derived from these, and the Makefile reads its tags from the bake file.
+2. **`README.md`** — update the variants table and, on a FrankenPHP version change, the example `FROM` line
 
 Check available upstream tags (PHP patch versions) before updating:
 ```
 https://hub.docker.com/r/dunglas/frankenphp/tags?name=1.x.y-php8.
 ```
 
+## CI
+
+`.github/workflows/build.yml` runs on PRs, pushes to `main` (when image files change), weekly and manually:
+
+- **build** — each target (`php-84`, `php-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
+- **merge** — on `main` only, combines the per-arch digests into multi-arch manifests with the tags from `docker-bake.hcl`
+
+The ghcr.io package must grant this repository's Actions write access.
+
 ## Build & Test Commands
 
 ```bash
 make bake-local   # Build for local arch, load into Docker, run tests — use this to verify changes
-make bake-all     # Build multi-arch (amd64 + arm64) and push to ghcr.io/requirecloud/frankenphp
+make bake-all     # Build multi-arch (amd64 + arm64) and push to ghcr.io/requirecloud/frankenphp (CI normally does this)
 make bake-print   # Dry-run: print the bake plan without building
 make shell-test   # Open a shell in the php8.5 image for manual inspection
 ```
