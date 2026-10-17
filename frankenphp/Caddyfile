@@ -48,7 +48,9 @@
 	}
 
 	root /app/public
-	encode zstd br gzip
+	# Compressed SSE streams cost memory per subscriber and enable BREACH-style attacks.
+	@compressible not path /.well-known/mercure*
+	encode @compressible zstd br gzip
 
 	# Mercure hub, disabled by default: set MERCURE_HUB=on to enable it
 	import mercure_{$MERCURE_HUB:off}
