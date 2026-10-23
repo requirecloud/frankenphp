@@ -5,12 +5,12 @@ variable "REPO_BASE" {
 # Upstream dunglas/frankenphp tags, all output tags are derived from these
 variable "UPSTREAM_PHP84" {
   # renovate: datasource=docker depName=dunglas/frankenphp
-  default = "1.13.2-php8.4.27"
+  default = "1.13.3-php8.4.27"
 }
 
 variable "UPSTREAM_PHP85" {
   # renovate: datasource=docker depName=dunglas/frankenphp
-  default = "1.13.2-php8.5.12"
+  default = "1.13.3-php8.5.12"
 }
 
 # "1.12.7-php8.4.26" => "1.12.7"
