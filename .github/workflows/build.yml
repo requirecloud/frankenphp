@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [php-84, php-85]
+        target: [php-84, php-85, php-86]
         arch: [amd64, arm64]
         include:
           - arch: amd64
@@ -114,7 +114,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        target: [php-84, php-85]
+        target: [php-84, php-85, php-86]
     env:
       TARGET: ${{ matrix.target }}
     steps:

@@ -5,12 +5,17 @@ variable "REPO_BASE" {
 # Upstream dunglas/frankenphp tags, all output tags are derived from these
 variable "UPSTREAM_PHP84" {
   # renovate: datasource=docker depName=dunglas/frankenphp
-  default = "1.13.6-php8.4.28"
+  default = "1.14.0-php8.4.28"
 }
 
 variable "UPSTREAM_PHP85" {
   # renovate: datasource=docker depName=dunglas/frankenphp
-  default = "1.13.6-php8.5.13"
+  default = "1.14.0-php8.5.13"
+}
+
+variable "UPSTREAM_PHP86" {
+  # renovate: datasource=docker depName=dunglas/frankenphp
+  default = "1.14.0-php8.6.0"
 }
 
 # "1.12.7-php8.4.26" => "1.12.7"
@@ -23,6 +28,7 @@ group "default" {
   targets = [
     "php-84",
     "php-85",
+    "php-86",
   ]
 }
 
@@ -71,9 +77,24 @@ target "php-85" {
     frankenphp_upstream = "docker-image://dunglas/frankenphp:${UPSTREAM_PHP85}"
   }
   tags = [
-    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP85)}-php8",
     "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP85)}-php8.5",
     "${REPO_BASE}:${UPSTREAM_PHP85}",
+  ]
+}
+
+target "php-86" {
+  inherits = ["common"]
+  args = {
+    PHP_VERSION = "8.6"
+    PHP_SHORT_VERSION = "86"
+  }
+  contexts = {
+    frankenphp_upstream = "docker-image://dunglas/frankenphp:${UPSTREAM_PHP86}"
+  }
+  tags = [
+    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP86)}-php8",
+    "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP86)}-php8.6",
+    "${REPO_BASE}:${UPSTREAM_PHP86}",
     "${REPO_BASE}:latest",
   ]
 }

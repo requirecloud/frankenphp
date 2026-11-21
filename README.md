@@ -8,12 +8,14 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 | Image                           | Tag              | FrankenPHP | PHP    |
 |:--------------------------------|:-----------------|:-----------|:-------|
-| ghcr.io/requirecloud/frankenphp | 1.13.2-php8.4    | 1.13.2     | 8.4.27 |
-| ghcr.io/requirecloud/frankenphp | 1.13.2-php8.4.27 | 1.13.2     | 8.4.27 |
-| ghcr.io/requirecloud/frankenphp | 1.13.2-php8      | 1.13.2     | 8.5.12 |
-| ghcr.io/requirecloud/frankenphp | 1.13.2-php8.5    | 1.13.2     | 8.5.12 |
-| ghcr.io/requirecloud/frankenphp | 1.13.2-php8.5.12 | 1.13.2     | 8.5.12 |
-| ghcr.io/requirecloud/frankenphp | latest           | 1.13.2     | 8.5.12 |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.4    | 1.14.0     | 8.4.28 |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.4.28 | 1.14.0     | 8.4.28 |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.5    | 1.14.0     | 8.5.13 |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.5.13 | 1.14.0     | 8.5.13 |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8      | 1.14.0     | 8.6.0  |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.6    | 1.14.0     | 8.6.0  |
+| ghcr.io/requirecloud/frankenphp | 1.14.0-php8.6.0  | 1.14.0     | 8.6.0  |
+| ghcr.io/requirecloud/frankenphp | latest           | 1.14.0     | 8.6.0  |
 
 All tags are released with `linux/amd64` and `linux/arm64` architecture.
 
@@ -22,10 +24,13 @@ All tags are released with `linux/amd64` and `linux/arm64` architecture.
 These are the extensions added with [install-php-extensions](https://github.com/mlocati/docker-php-extension-installer)
 
 - @composer
-- apcu
 - intl
+- mbstring
 - opcache
 - zip
+
+`apcu` was included up to FrankenPHP 1.13.x images. If you need it (e.g. Drupal), install it in your own
+`Dockerfile`. Note that apcu has no release supporting PHP 8.6 yet.
 
 ## Example usage
 
@@ -34,7 +39,7 @@ In your `Dockerfile` it could be used e.g. like this:
 ```Dockerfile
 #syntax=docker/dockerfile:1
 
-FROM ghcr.io/requirecloud/frankenphp:1.13.2-php8.5 AS frankenphp_base
+FROM ghcr.io/requirecloud/frankenphp:1.14.0-php8.6 AS frankenphp_base
 
 # Install additional extensions
 RUN apt-get update && \
