@@ -10,7 +10,7 @@ variable "UPSTREAM_PHP84" {
 
 variable "UPSTREAM_PHP85" {
   # renovate: datasource=docker depName=dunglas/frankenphp
-  default = "1.13.6-php8.5.13"
+  default = "1.14.0-php8.5.13"
 }
 
 # "1.12.7-php8.4.26" => "1.12.7"
