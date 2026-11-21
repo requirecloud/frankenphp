@@ -15,7 +15,7 @@ Opinionated Docker images based on [FrankenPHP](https://frankenphp.dev), used as
 
 Renovate opens PRs for new upstream tags (PHP patch releases and FrankenPHP releases). To update by hand:
 
-1. **`docker-bake.hcl`** — update `UPSTREAM_PHP84` / `UPSTREAM_PHP85` (full upstream tag, e.g. `1.12.7-php8.4.26`). All output tags are derived from these, and the Makefile reads its tags from the bake file.
+1. **`docker-bake.hcl`** — update `UPSTREAM_PHP84` / `UPSTREAM_PHP85` / `UPSTREAM_PHP86` (full upstream tag, e.g. `1.12.7-php8.4.26`). All output tags are derived from these, and the Makefile reads its tags from the bake file.
 2. **`README.md`** — update the variants table and, on a FrankenPHP version change, the example `FROM` line
 
 Check available upstream tags (PHP patch versions) before updating:
@@ -27,7 +27,7 @@ https://hub.docker.com/r/dunglas/frankenphp/tags?name=1.x.y-php8.
 
 `.github/workflows/build.yml` runs on PRs, pushes to `main` (when image files change), weekly and manually:
 
-- **build** — each target (`php-84`, `php-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
+- **build** — each target (`php-84`, `php-85`, `php-86`, `drupal-84`, `drupal-85`, `drupal-dev-84`, `drupal-dev-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
 - **merge** — on `main` only, combines the per-arch digests into multi-arch manifests with the tags from `docker-bake.hcl`
 
 The ghcr.io package must grant this repository's Actions write access.
@@ -38,20 +38,33 @@ The ghcr.io package must grant this repository's Actions write access.
 make bake-local   # Build for local arch, load into Docker, run tests — use this to verify changes
 make bake-all     # Build multi-arch (amd64 + arm64) and push to ghcr.io/requirecloud/frankenphp (CI normally does this)
 make bake-print   # Dry-run: print the bake plan without building
-make shell-test   # Open a shell in the php8.5 image for manual inspection
+make shell-test   # Open a shell in the php8.6 image for manual inspection
 ```
 
-## Published Image
+## Published Images
 
-**Registry:** `ghcr.io/requirecloud/frankenphp`
+**Registry:** `ghcr.io/requirecloud/frankenphp` (targets `php-*`) and `ghcr.io/requirecloud/frankenphp-drupal` (targets `drupal-*`)
 **Architectures:** `linux/amd64`, `linux/arm64`
 
 ## What the Image Adds Over Upstream
 
 Extensions installed via `install-php-extensions`:
-- `@composer`, `apcu`, `intl`, `opcache`, `zip`
+- `@composer`, `intl`, `mbstring`, `opcache`, `zip`
+- `apcu` is intentionally not included (differs from `Dockerfile.dist`); projects that need it, like Drupal, install it themselves
 
 Additional apt packages: `acl`, `fastfetch`, `file`, `gettext`, `git`, `vim`
+
+## Drupal Images
+
+- `frankenphp_drupal` stage (targets `drupal-84` / `drupal-85`) builds on `frankenphp_base` and adds `apcu`, `gd`,
+  `pdo_mysql`, `redis`, `default-mysql-client`, `msmtp-mta` (as PHP `sendmail_path`), `php.ini-production`,
+  `APP_ENV=prod`, `/app/vendor/bin` in `PATH`, and the Drupal `frankenphp/drupal/Caddyfile` and
+  `frankenphp/drupal/docker-entrypoint.sh` (replace the base ones)
+- `frankenphp_drupal_dev` stage (targets `drupal-dev-84` / `drupal-dev-85`, tags suffixed `-dev`) adds `xdebug`,
+  `php.ini-development`, `APP_ENV=dev` and `--watch`
+- Targets inherit the PHP version from `php-84` / `php-85`; there is no 8.6 variant until apcu and redis support it
+- Tests: `tests/tests.sh drupal [drupal-dev]` also runs `tests/drupal.sh` / `tests/drupal-dev.sh`
+- The `common` target sets `target = "frankenphp_base"`, as the Dockerfile's last stage is a Drupal one
 
 Custom files from `frankenphp/`:
 - `Caddyfile` — base Caddy/FrankenPHP config
