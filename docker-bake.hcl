@@ -35,6 +35,8 @@ group "default" {
     "php-86",
     "drupal-84",
     "drupal-85",
+    "drupal-dev-84",
+    "drupal-dev-85",
   ]
 }
 
@@ -130,4 +132,16 @@ target "drupal-85" {
     "${REPO_DRUPAL}:${UPSTREAM_PHP85}",
     "${REPO_DRUPAL}:latest",
   ]
+}
+
+target "drupal-dev-84" {
+  inherits = ["drupal-84"]
+  target = "frankenphp_drupal_dev"
+  tags = [for tag in target.drupal-84.tags : "${tag}-dev"]
+}
+
+target "drupal-dev-85" {
+  inherits = ["drupal-85"]
+  target = "frankenphp_drupal_dev"
+  tags = [for tag in target.drupal-85.tags : "${tag}-dev"]
 }

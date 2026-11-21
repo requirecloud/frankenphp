@@ -27,7 +27,7 @@ https://hub.docker.com/r/dunglas/frankenphp/tags?name=1.x.y-php8.
 
 `.github/workflows/build.yml` runs on PRs, pushes to `main` (when image files change), weekly and manually:
 
-- **build** — each target (`php-84`, `php-85`, `php-86`, `drupal-84`, `drupal-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
+- **build** — each target (`php-84`, `php-85`, `php-86`, `drupal-84`, `drupal-85`, `drupal-dev-84`, `drupal-dev-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
 - **merge** — on `main` only, combines the per-arch digests into multi-arch manifests with the tags from `docker-bake.hcl`
 
 The ghcr.io package must grant this repository's Actions write access.
@@ -54,12 +54,17 @@ Extensions installed via `install-php-extensions`:
 
 Additional apt packages: `acl`, `fastfetch`, `file`, `gettext`, `git`, `vim`
 
-## Drupal Image
+## Drupal Images
 
-The `frankenphp_drupal` stage in `Dockerfile` builds on `frankenphp_base` and adds `apcu`, `gd`, `pdo_mysql`, `redis`,
-`default-mysql-client` and `msmtp-mta` (as PHP `sendmail_path`). Targets `drupal-84` / `drupal-85` inherit the PHP version
-from `php-84` / `php-85`; there is no 8.6 variant until apcu and redis support it. Tests: `tests/tests.sh drupal` also runs
-`tests/drupal.sh`. The `common` target sets `target = "frankenphp_base"`, as the last stage is the Drupal one.
+- `frankenphp_drupal` stage (targets `drupal-84` / `drupal-85`) builds on `frankenphp_base` and adds `apcu`, `gd`,
+  `pdo_mysql`, `redis`, `default-mysql-client`, `msmtp-mta` (as PHP `sendmail_path`), `php.ini-production`,
+  `APP_ENV=prod`, `/app/vendor/bin` in `PATH`, and the Drupal `frankenphp/drupal/Caddyfile` and
+  `frankenphp/drupal/docker-entrypoint.sh` (replace the base ones)
+- `frankenphp_drupal_dev` stage (targets `drupal-dev-84` / `drupal-dev-85`, tags suffixed `-dev`) adds `xdebug`,
+  `php.ini-development`, `APP_ENV=dev` and `--watch`
+- Targets inherit the PHP version from `php-84` / `php-85`; there is no 8.6 variant until apcu and redis support it
+- Tests: `tests/tests.sh drupal [drupal-dev]` also runs `tests/drupal.sh` / `tests/drupal-dev.sh`
+- The `common` target sets `target = "frankenphp_base"`, as the Dockerfile's last stage is a Drupal one
 
 Custom files from `frankenphp/`:
 - `Caddyfile` — base Caddy/FrankenPHP config

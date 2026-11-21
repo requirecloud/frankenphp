@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [php-84, php-85, php-86, drupal-84, drupal-85]
+        target: [php-84, php-85, php-86, drupal-84, drupal-85, drupal-dev-84, drupal-dev-85]
         arch: [amd64, arm64]
         include:
           - arch: amd64
@@ -88,8 +88,11 @@ jobs:
 
       - name: Run tests
         run: |
-          args=()
-          [[ "$TARGET" == drupal-* ]] && args=(drupal)
+          case "$TARGET" in
+            drupal-dev-*) args=(drupal drupal-dev) ;;
+            drupal-*) args=(drupal) ;;
+            *) args=() ;;
+          esac
           docker run --rm -v "$PWD/tests:/app" "frankenphp-test:$TARGET" /app/tests.sh "${args[@]}"
 
       - name: Export digest
@@ -119,7 +122,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        target: [php-84, php-85, php-86, drupal-84, drupal-85]
+        target: [php-84, php-85, php-86, drupal-84, drupal-85, drupal-dev-84, drupal-dev-85]
     env:
       TARGET: ${{ matrix.target }}
     steps:

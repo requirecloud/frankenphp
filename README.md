@@ -33,11 +33,35 @@ need preinstalled. There is no PHP 8.6 variant yet, as `apcu` and `redis` have n
 | ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8.5.13 | 1.14.0     | 8.5.13 |
 | ghcr.io/requirecloud/frankenphp-drupal | latest           | 1.14.0     | 8.5.13 |
 
+Every tag also has a `-dev` variant (e.g. `1.14.0-php8.5.13-dev`, `latest-dev`) for local development.
+
 In addition to the base image it has:
 
 - PHP extensions: `apcu`, `gd`, `pdo_mysql`, `redis`
 - `default-mysql-client` (for e.g. `drush sql:*`)
 - `msmtp-mta` as `sendmail`, with PHP `sendmail_path` set to it
+- `php.ini-production` as `php.ini` and `APP_ENV=prod`
+- `/app/vendor/bin` in `PATH` (e.g. `drush`)
+- Drupal [Caddyfile](frankenphp/drupal/Caddyfile): docroot from `DRUPAL_DOCROOT` (default `/app/public`), blocks
+  `update.php` and private files, caches static files and sets security headers. Add your own directives with
+  `CADDY_SERVER_EXTRA_DIRECTIVES`.
+- Drupal [entrypoint](frankenphp/drupal/docker-entrypoint.sh): runs `composer install` if `vendor/` is empty, makes
+  `sites/default/files` writable for `www-data` (not in dev) and configures msmtp when `SMTP_HOST` is set
+  (`SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`)
+
+The `-dev` variant adds `xdebug` (off by default, set `XDEBUG_MODE`), `php.ini-development`, `APP_ENV=dev`
+and runs FrankenPHP with `--watch`.
+
+```Dockerfile
+FROM ghcr.io/requirecloud/frankenphp-drupal:1.14.0-php8.5-dev AS frankenphp_dev
+
+FROM ghcr.io/requirecloud/frankenphp-drupal:1.14.0-php8.5 AS frankenphp_prod
+
+COPY --link composer.* ./
+RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
+COPY --link public ./public
+RUN composer dump-autoload --classmap-authoritative --no-dev && composer run-script --no-dev post-install-cmd
+```
 
 ## Extensions added
 
