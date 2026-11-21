@@ -56,3 +56,22 @@ HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit
 CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile" ]
 
 # Handle dev and prod in project
+
+# Drupal image
+FROM frankenphp_base AS frankenphp_drupal
+
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	default-mysql-client \
+	msmtp-mta \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+	install-php-extensions \
+		apcu \
+		gd \
+		pdo_mysql \
+		redis \
+	;
+
+RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > "$PHP_INI_DIR/conf.d/msmtp.ini"

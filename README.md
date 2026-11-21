@@ -19,6 +19,26 @@ Setup is based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-do
 
 All tags are released with `linux/amd64` and `linux/arm64` architecture.
 
+### Drupal
+
+`ghcr.io/requirecloud/frankenphp-drupal` is built on top of the base image above, with what Drupal projects
+need preinstalled. There is no PHP 8.6 variant yet, as `apcu` and `redis` have no release supporting it.
+
+| Image                                  | Tag              | FrankenPHP | PHP    |
+|:---------------------------------------|:-----------------|:-----------|:-------|
+| ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8.4    | 1.14.0     | 8.4.28 |
+| ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8.4.28 | 1.14.0     | 8.4.28 |
+| ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8      | 1.14.0     | 8.5.13 |
+| ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8.5    | 1.14.0     | 8.5.13 |
+| ghcr.io/requirecloud/frankenphp-drupal | 1.14.0-php8.5.13 | 1.14.0     | 8.5.13 |
+| ghcr.io/requirecloud/frankenphp-drupal | latest           | 1.14.0     | 8.5.13 |
+
+In addition to the base image it has:
+
+- PHP extensions: `apcu`, `gd`, `pdo_mysql`, `redis`
+- `default-mysql-client` (for e.g. `drush sql:*`)
+- `msmtp-mta` as `sendmail`, with PHP `sendmail_path` set to it
+
 ## Extensions added
 
 These are the extensions added with [install-php-extensions](https://github.com/mlocati/docker-php-extension-installer)
@@ -29,8 +49,8 @@ These are the extensions added with [install-php-extensions](https://github.com/
 - opcache
 - zip
 
-`apcu` was included up to FrankenPHP 1.13.x images. If you need it (e.g. Drupal), install it in your own
-`Dockerfile`. Note that apcu has no release supporting PHP 8.6 yet.
+`apcu` was included up to FrankenPHP 1.13.x images. If you need it, install it in your own `Dockerfile` or
+use the Drupal image. Note that apcu has no release supporting PHP 8.6 yet.
 
 ## Example usage
 

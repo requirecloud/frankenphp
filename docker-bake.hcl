@@ -2,6 +2,10 @@ variable "REPO_BASE" {
   default = "ghcr.io/requirecloud/frankenphp"
 }
 
+variable "REPO_DRUPAL" {
+  default = "${REPO_BASE}-drupal"
+}
+
 # Upstream dunglas/frankenphp tags, all output tags are derived from these
 variable "UPSTREAM_PHP84" {
   # renovate: datasource=docker depName=dunglas/frankenphp
@@ -29,12 +33,15 @@ group "default" {
     "php-84",
     "php-85",
     "php-86",
+    "drupal-84",
+    "drupal-85",
   ]
 }
 
 target "common" {
   context = "./"
   dockerfile = "./Dockerfile"
+  target = "frankenphp_base"
   platforms = [
     "linux/amd64",
     "linux/arm64"
@@ -96,5 +103,31 @@ target "php-86" {
     "${REPO_BASE}:${frankenphp_version(UPSTREAM_PHP86)}-php8.6",
     "${REPO_BASE}:${UPSTREAM_PHP86}",
     "${REPO_BASE}:latest",
+  ]
+}
+
+#
+# DRUPAL
+#
+# No PHP 8.6 variant yet: apcu and redis have no release supporting it
+#
+
+target "drupal-84" {
+  inherits = ["php-84"]
+  target = "frankenphp_drupal"
+  tags = [
+    "${REPO_DRUPAL}:${frankenphp_version(UPSTREAM_PHP84)}-php8.4",
+    "${REPO_DRUPAL}:${UPSTREAM_PHP84}",
+  ]
+}
+
+target "drupal-85" {
+  inherits = ["php-85"]
+  target = "frankenphp_drupal"
+  tags = [
+    "${REPO_DRUPAL}:${frankenphp_version(UPSTREAM_PHP85)}-php8",
+    "${REPO_DRUPAL}:${frankenphp_version(UPSTREAM_PHP85)}-php8.5",
+    "${REPO_DRUPAL}:${UPSTREAM_PHP85}",
+    "${REPO_DRUPAL}:latest",
   ]
 }

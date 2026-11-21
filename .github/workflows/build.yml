@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [php-84, php-85, php-86]
+        target: [php-84, php-85, php-86, drupal-84, drupal-85]
         arch: [amd64, arm64]
         include:
           - arch: amd64
@@ -74,9 +74,11 @@ jobs:
       # It only gets tagged in the merge job, after tests on all arches have passed.
       - name: Build image
         run: |
+          # Image repository of the target, e.g. ghcr.io/requirecloud/frankenphp-drupal
+          repo=$(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[0] | sub(":[^:]+$"; "")')
           outputs=(--set "$TARGET.output=type=docker,name=frankenphp-test:$TARGET")
           if [[ "$PUSH" == "true" ]]; then
-            outputs+=(--set "$TARGET.output=type=image,name=$REPO_BASE,push-by-digest=true,name-canonical=true,push=true")
+            outputs+=(--set "$TARGET.output=type=image,name=$repo,push-by-digest=true,name-canonical=true,push=true")
           fi
           docker buildx bake -f docker-bake.hcl "$TARGET" --pull --no-cache \
             --set "$TARGET.platform=linux/$ARCH" \
@@ -85,7 +87,10 @@ jobs:
             --metadata-file metadata.json
 
       - name: Run tests
-        run: docker run --rm -v "$PWD/tests:/app" "frankenphp-test:$TARGET" /app/tests.sh
+        run: |
+          args=()
+          [[ "$TARGET" == drupal-* ]] && args=(drupal)
+          docker run --rm -v "$PWD/tests:/app" "frankenphp-test:$TARGET" /app/tests.sh "${args[@]}"
 
       - name: Export digest
         if: env.PUSH == 'true'
@@ -114,7 +119,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        target: [php-84, php-85, php-86]
+        target: [php-84, php-85, php-86, drupal-84, drupal-85]
     env:
       TARGET: ${{ matrix.target }}
     steps:
@@ -141,7 +146,8 @@ jobs:
       - name: Create and push manifest
         run: |
           mapfile -t tags < <(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[] | "--tag=" + .')
-          mapfile -t sources < <(find digests -type f -printf "$REPO_BASE@sha256:%f\n")
+          repo=$(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[0] | sub(":[^:]+$"; "")')
+          mapfile -t sources < <(find digests -type f -printf "$repo@sha256:%f\n")
           docker buildx imagetools create "${tags[@]}" "${sources[@]}"
 
       - name: Inspect image
