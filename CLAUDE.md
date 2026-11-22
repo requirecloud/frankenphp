@@ -25,10 +25,12 @@ https://hub.docker.com/r/dunglas/frankenphp/tags?name=1.x.y-php8.
 
 ## CI
 
-`.github/workflows/build.yml` runs on PRs, pushes to `main` (when image files change), weekly and manually:
+`.github/workflows/build.yml` runs on every PR, pushes to `main` (when image files change), weekly and manually:
 
+- **changes** — on PRs, checks whether image files changed (`docker-bake.hcl`, `Dockerfile`, `frankenphp/`, `tests/`, the workflow); if not, the builds are skipped
 - **build** — each target (`php-84`, `php-85`, `php-86`, `drupal-84`, `drupal-85`, `drupal-dev-84`, `drupal-dev-85`) is built on native amd64 and arm64 runners, tested with `tests/tests.sh`, and on `main` pushed untagged by digest
 - **merge** — on `main` only, combines the per-arch digests into multi-arch manifests with the tags from `docker-bake.hcl`
+- **result** — `CI result`, the only required status check on `main`; passes when every build passed or the builds were skipped, so docs-only PRs can merge. Don't require individual `Build …` checks, they don't report when skipped
 
 The ghcr.io package must grant this repository's Actions write access.
 
