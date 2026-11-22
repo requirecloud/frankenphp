@@ -9,13 +9,9 @@ on:
       - frankenphp/**
       - tests/**
       - .github/workflows/build.yml
+  # No paths filter: the "CI result" job is a required check and must report on every PR.
+  # The changes job decides whether the image builds run.
   pull_request:
-    paths:
-      - docker-bake.hcl
-      - Dockerfile
-      - frankenphp/**
-      - tests/**
-      - .github/workflows/build.yml
   # Weekly rebuild to pick up OS package updates
   schedule:
     - cron: '0 4 * * 1'
@@ -35,9 +31,40 @@ env:
 
 jobs:
 
+  # On PRs, build only when image files changed; other events always build
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-26.04
+    outputs:
+      build: ${{ steps.filter.outputs.build }}
+    steps:
+      - name: Checkout code
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Check changed files
+        id: filter
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" != "pull_request" ]]; then
+            build=true
+          elif git diff --name-only "$BASE_SHA...$HEAD_SHA" \
+            | grep -qE '^(docker-bake\.hcl|Dockerfile|frankenphp/|tests/|\.github/workflows/build\.yml)'; then
+            build=true
+          else
+            build=false
+          fi
+          echo "build=$build" | tee -a "$GITHUB_OUTPUT"
+
   # Build each target natively per arch, run tests and push the image by digest
   build:
     name: Build ${{ matrix.target }} (${{ matrix.arch }})
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -157,3 +184,18 @@ jobs:
         run: |
           tag=$(docker buildx bake -f docker-bake.hcl --print "$TARGET" | jq -r --arg t "$TARGET" '.target[$t].tags[0]')
           docker buildx imagetools inspect "$tag"
+
+  # The single required status check: passes when all builds passed or were skipped (no image changes)
+  result:
+    name: CI result
+    needs: [changes, build]
+    if: always()
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Check build results
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          BUILD: ${{ needs.build.result }}
+        run: |
+          echo "changes=$CHANGES build=$BUILD"
+          [[ "$CHANGES" == "success" && ( "$BUILD" == "success" || "$BUILD" == "skipped" ) ]]
