@@ -60,8 +60,11 @@ FROM ghcr.io/requirecloud/frankenphp-drupal:1.14.0-php8.5 AS frankenphp_prod
 COPY --link composer.* ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 COPY --link public ./public
-RUN composer dump-autoload --classmap-authoritative --no-dev && composer run-script --no-dev post-install-cmd
+RUN composer dump-autoload --optimize --no-dev && composer run-script --no-dev post-install-cmd
 ```
+
+Use `--optimize`, not `--classmap-authoritative`, with Drupal: Drupal registers database driver namespaces at runtime,
+which an authoritative classmap ignores (`Class "Drupal\mysql\Driver\Database\mysql\Connection" not found`).
 
 ## Extensions added
 
